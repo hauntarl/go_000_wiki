@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Edit File</title>
+</head>
+
+<h1>Editing {{.Title}}</h1>
+
+<form action="/save/{{.Title}}" method="POST">
+    <textarea name="body">{{printf "%s" .Body}}</textarea><br>
+    <input type="submit" value="Save">
+</form>
+
+</html>
