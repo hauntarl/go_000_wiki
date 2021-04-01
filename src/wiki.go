@@ -29,8 +29,10 @@ func handleRoot(w http.ResponseWriter, r *http.Request) {
 	logInfo(r.URL.Path, "redirected to front page")
 }
 
+// acceptable combinations of path by the application
 var validPath = regexp.MustCompile(`^/(view|edit|save)/([a-zA-Z0-9]+)$`)
 
+// wrapper function, which will handle extraction of title, required by all
 func makeHandler(handler func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		exp := validPath.FindStringSubmatch(r.URL.Path)
@@ -43,6 +45,7 @@ func makeHandler(handler func(http.ResponseWriter, *http.Request, string)) http.
 	}
 }
 
+// displays content for given title, if absent, opens the file in edit mode
 func handleView(w http.ResponseWriter, r *http.Request, title string) {
 	p, err := page.Load(title)
 	if err != nil {
@@ -56,6 +59,7 @@ func handleView(w http.ResponseWriter, r *http.Request, title string) {
 	logInfo(p.Title, "file displayed")
 }
 
+// loads the title to be edited from database
 func handleEdit(w http.ResponseWriter, r *http.Request, title string) {
 	p, err := page.Load(title)
 	if err != nil {
@@ -65,6 +69,7 @@ func handleEdit(w http.ResponseWriter, r *http.Request, title string) {
 	logInfo(p.Title, "file opened in edit mode")
 }
 
+// helper function which handles the rendering template with given Page data
 func render(w http.ResponseWriter, tmpl string, p *page.Page) {
 	if err := page.Templates.ExecuteTemplate(w, tmpl+".html", p); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -72,6 +77,7 @@ func render(w http.ResponseWriter, tmpl string, p *page.Page) {
 	}
 }
 
+// Saves created/edited Page into database
 func handleSave(w http.ResponseWriter, r *http.Request, title string) {
 	var (
 		body = r.FormValue("body")
