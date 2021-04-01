@@ -26,3 +26,5 @@ D:\godemo\wiki>go run wiki.go
 2021/04/01 18:25:54 FrontPage                      : file displayed
 exit status 3221225786
 ```
+
+Note: the generated data files are not pushed on Github
